@@ -17,6 +17,5 @@ int main (){
 	cout<<"and used a remote repository hosted by github. \n";
 	cout<<"If I can do this, so can you!!!\n";
 
-	getchar();
 	return 0;
 }
