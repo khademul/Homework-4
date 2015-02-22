@@ -16,6 +16,9 @@ int main (){
 	cout<<"I also version-controlled this code using git, \n";
 	cout<<"and used a remote repository hosted by github. \n";
 	cout<<"If I can do this, so can you!!!\n";
+	cout<<"\n";
+	cout<<"I am so cool, that I was also able to write a code that produces\n";
+	cout<<"the first M numbers of the Fibonacci sequence. Here they are: \n";
 
 	return 0;
 }
