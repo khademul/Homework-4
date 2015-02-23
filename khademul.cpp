@@ -83,7 +83,7 @@ int main (){
 
         in >> n;
 		if(n <= 0){
-			string str = "Error: n must be >= 0\n";
+			string str = "Error: n must be >= 1\n";
 			print_string(errfile, str);
 			print_string(cout, str);
 			in.close();
