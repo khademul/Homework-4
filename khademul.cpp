@@ -7,21 +7,20 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
-#include <map>
+#include <sstream>
 #include <exception>
+#include <cstdlib>
 
 using namespace std;
 
-struct Info{
-    string name;
-    unsigned int value;
-    
-    Info(string name = "", unsigned int value = 0){
-        this->name = name;
-        this->value =  value;
-    }
-};
+void print_string(ofstream& stream, string str){
+	if(stream.is_open())
+		stream << str;
+}
+
+void print_string(ostream& stream, string str){
+	stream << str;
+}
 
 int main (){
 
@@ -45,14 +44,6 @@ int main (){
 	// Two dimensional array, unlimited rows, first 10 columns
     // Cell values are number of Fibonaaci series
     unsigned int** matrix = NULL;
-
-	// total values
-    vector<Info> row_totals, column_totals;
-
-	// row to row index mapping
-    map<string, int> row_to_row;
-    // column to column index mapping
-    map<string, int> column_to_column;
 
 	string last_line; // For showing errors in the input
     int last_line_no = 1;
