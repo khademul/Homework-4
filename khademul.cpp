@@ -60,9 +60,7 @@ int main (){
 	cout<<"the first M numbers of the Fibonacci sequence. Here they are: \n";
 	cout<<"\n";
 
-	string in_file_path;
-	cout<<"Enter input file name: ";
-	cin >> in_file_path;
+	const char* in_file_path = "khademul.in";
 	const char* out_file_path = "khademul.out";
     const char* err_file_path = "khademul.err";
 
