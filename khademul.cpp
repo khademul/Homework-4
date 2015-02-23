@@ -1,28 +1,7 @@
 /*Khademul Haque
   CIVL 8903
   Homework 4
-
-   for(int c = 0; c < 10*n; c++){
-if(c <= 1) sum = c;
-else{
-sum = first + second;
-std::cout << sum << " ";
-if(c % 10 == 0 ){
-std::cout << "\n";
-}
-}
-// next fib
-first = second;
-second = sum;
-}
-
-void print_output(ofstream& stream, string str){
-
-  stream << str;
-}
-print_output(cout, "\n");
-  // convert a number into string
-
+  URL: https://github.com/khademul/Homework-4
 */
 
 #include <iostream>
