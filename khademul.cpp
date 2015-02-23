@@ -22,6 +22,30 @@ void print_string(ostream& stream, string str){
 	stream << str;
 }
 
+void open_input(string file_path, ifstream& in){
+	in.open(file_path.c_str());
+	if(!in.is_open()){
+		string str = "Error: cannot open file for reading: " + file_path + "\n";
+		print_string(cout, str);
+		exit(0);
+	}
+	else{
+		print_string(cout, "Opening " + file_path + " for reading\n");
+	}
+}
+
+void open_output(string file_path, ofstream& out){
+	out.open(file_path.c_str());
+	if(!out.is_open()){
+		string str = "Error: cannot open file for writing: " +file_path + "\n";
+		print_string(cout, str);
+		exit(0);
+	}
+	else{
+		print_string(cout, "Opening " + file_path + " for writing\n");
+	}
+}
+
 int main (){
 
 	cout<<"I was able to compile this code using the HPC at the University of Memphis.\n";
@@ -34,6 +58,7 @@ int main (){
 	cout<<"\n";
 	cout<<"I am so cool, that I was also able to write a code that produces\n";
 	cout<<"the first M numbers of the Fibonacci sequence. Here they are: \n";
+	cout<<"\n";
 
 	string in_file_path;
 	cout<<"Enter input file name: ";
@@ -41,120 +66,77 @@ int main (){
 	const char* out_file_path = "khademul.out";
     const char* err_file_path = "khademul.err";
 
-	// Two dimensional array, unlimited rows, first 10 columns
-    // Cell values are number of Fibonaaci series
-    unsigned int** matrix = NULL;
+	ifstream in;
+	open_input(in_file_path, in);
+    ofstream outfile, errfile;
+	open_output(out_file_path, outfile);
+	open_output(err_file_path, errfile);
 
-	string last_line; // For showing errors in the input
-    int last_line_no = 1;
-
-	ifstream in(in_file_path.c_str());
-    ofstream outfile(out_file_path);
-    ofstream errfile(err_file_path);
-	if(!errfile.is_open()){
-        cerr << "Cannot open error file for writing: " << err_file_path << "\n";
-        return 0;
-    }    
-
-	int c, first=0, second=1, sum;
+	int c;
+	//Fibonacci numbers can be very big;
+	//Hence, using unsigned long long (64 bit) numbers
+	unsigned long long first=0, second=1, fib;
 
 	try{    
-        if(in.is_open() ){
-            cout << "Reading " << in_file_path << "...\n";
+        // read N
+        int n;
 
-            // read N
-            int n;
+        in >> n;
+		if(n <= 0){
+			string str = "Error: n must be >= 0\n";
+			print_string(errfile, str);
+			print_string(cout, str);
+			in.close();
+			if(outfile.is_open())
+				outfile.close();
+			errfile.close();
+			//exit program
+			return 0;
+		}
+		
+		// done with input
+		in.close();
 
-            in >> n;
+		stringstream ss;
+		ss <<"First "<< n <<" terms of Fibonacci series are : \n";
+		print_string(outfile, ss.str());
+		print_string(cout, ss.str());
 
-			// done with input
-            in.close();
+		int num_items = 10 * n;
 
-			cout <<"First "<< n <<" terms of Fibonacci series are : " <<endl;
-			// create output matrix
-            matrix = new unsigned int*[n];
-            for(int a = 0; a < n; a++){
-                matrix[a] = new unsigned int[10];
-                for(int b = 0; b <10; b++){
-                    matrix[a][b] = 0;
-			for (c=0; c<n ;c++){
+		for (c=0; c < num_items ;c++){
+			stringstream s_fib;
 				if (c <= 1)
-					sum=c;
+					fib=c;
 				else{
-					sum=first+second;
+					fib=first+second;
 					first=second;
-					second=sum;
+					second=fib;
 				}
-				cout<<sum<<endl;
-			}
-			void print_output(ofstream, string){
-               for(int c = 0; c < 10*n; c++){
-if(c <= 1) sum = c;
-else{
-sum = first + second;
-cout << sum << " ";
-
-if(c % 10 == 0 ){
-	cout << "\n";
-}
-}
-}
-// next fib
-first = second;
-second = sum;
-}
-		   // validate
-                if( n >= 1)
-                {
-                    // save the value in the matrix
-                    matrix[a][b] = sum;
-
-                }
-                else{
-                    cerr << "Entry# " << n << ": " << last_line << " -- Warning: negative entry\n";
-                    errfile << "Entry# " << n << ": " << last_line << " -- Warning: negative entry\n";
-                    sum++;
-					}
-				 }
-		      }
-			// save output
-            if(outfile.is_open()){
-				cout << "Writing output in file: " << out_file_path << "\n";
-				// print matrix
-                outfile << "First "<< n <<" terms of Fibonacci series are :\n";
-                for(int a = 0; a < n; a++){
-                   outfile << matrix[a];
-                    for(int b = 0; b < 11; b++){
-                        outfile << "\t" << matrix[a][b];
-                    }
-                    outfile << "\n";
-                }
-				// done
-                outfile.close();
-			}
-			else{
-                cerr << "Error: cannot open file for writing: " << out_file_path << "\n";                
-                errfile << "Error: cannot open file for writing: " << out_file_path << "\n";                
-            }
-        }
-        else{
-            cerr << "Error: cannot open file for reading: " << in_file_path << "\n";
-            errfile << "Error: cannot open file for reading: " << in_file_path << "\n";
-        }
+				// print fib
+				s_fib<<fib;
+				print_string(cout, s_fib.str()+"\t");
+				print_string(outfile, s_fib.str()+"\t");
+				// print a newline after every 10 fib
+				if(c % 10 == 0){
+					print_string(cout, "\n");
+					print_string(outfile, "\n");
+				}
+		}
+		// a new line after all output is done
+		print_string(cout, "\n");
+		print_string(outfile, "\n");
 	}
 	catch(exception& e){
-        cerr << "Error: " << e.what() << "\n";
-        cerr << "Error: " << e.what() << "\nLine " << last_line_no << ": " << last_line << "\n";
-        errfile << "Error: Line " << last_line_no << ": " << last_line << "\n";
-    }
+        string str = string("Error: ")+e.what()+ "\n";
+		print_string(cout, str);
+		print_string(outfile, str);
+	}
+
 	// clean up
     if(in.is_open()) in.close();
     if(outfile.is_open()) outfile.close();
-    if(matrix != NULL) {
-        for(int a = 0; a < sum; a++){
-            if(matrix[a]) delete[] matrix[a];
-        }
-        delete[] matrix;
-    }
+    if(errfile.is_open()) errfile.close();
+
 	return 0;
 }
